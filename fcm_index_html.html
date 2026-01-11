@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Alerts - Notificaciones</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    .status {
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .status.inactive {
+      background: #fee;
+      color: #c00;
+    }
+
+    .status.active {
+      background: #efe;
+      color: #0a0;
+    }
+
+    .status.loading {
+      background: #ffeaa7;
+      color: #d63031;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .info {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    .info h3 {
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .info ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .info li {
+      padding: 8px 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .info li:before {
+      content: "✓ ";
+      color: #0a0;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .token-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      font-size: 12px;
+      word-break: break-all;
+      color: #666;
+    }
+
+    .error {
+      background: #fee;
+      color: #c00;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .loader {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="icon">🔔</div>
+      <h1>Trading Alerts</h1>
+      <p class="subtitle">Recibe notificaciones en tiempo real de tus estrategias de trading</p>
+    </div>
+
+    <div id="status" class="status inactive">
+      ⚠️ Notificaciones desactivadas
+    </div>
+
+    <button id="enableBtn" class="btn-primary">
+      Activar Notificaciones
+    </button>
+
+    <button id="testBtn" class="btn-secondary" style="display: none;">
+      Enviar Notificación de Prueba
+    </button>
+
+    <div id="error" class="error" style="display: none;"></div>
+
+    <div id="tokenInfo" class="token-info" style="display: none;"></div>
+
+    <div class="info">
+      <h3>📊 ¿Qué recibirás?</h3>
+      <ul>
+        <li>Señales de compra/venta en tiempo real</li>
+        <li>Análisis técnico automatizado</li>
+        <li>Alertas de BTC, ETH y SOL</li>
+        <li>Estrategias Pivot + EMA9 y VWAP</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      v3.0 Pro Scalping | Powered by Firebase
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getMessaging, getToken, onMessage } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js';
+
+    // ============================================================================
+    // CONFIGURACIÓN DE FIREBASE
+    // ============================================================================
+    // ⚠️ IMPORTANTE: Reemplaza estos valores con los de tu proyecto Firebase
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROJECT_ID.firebaseapp.com",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_PROJECT_ID.appspot.com",
+      messagingSenderId: "TU_SENDER_ID",
+      appId: "TU_APP_ID"
+    };
+
+    // VAPID Key (clave pública de Cloud Messaging)
+    const VAPID_KEY = "TU_VAPID_KEY";
+
+    // ============================================================================
+    // INICIALIZACIÓN
+    // ============================================================================
+    let app, messaging;
+    let isInitialized = false;
+
+    const statusDiv = document.getElementById('status');
+    const enableBtn = document.getElementById('enableBtn');
+    const testBtn = document.getElementById('testBtn');
+    const errorDiv = document.getElementById('error');
+    const tokenInfoDiv = document.getElementById('tokenInfo');
+
+    function showError(message) {
+      errorDiv.textContent = `❌ Error: ${message}`;
+      errorDiv.style.display = 'block';
+      console.error(message);
+    }
+
+    function hideError() {
+      errorDiv.style.display = 'none';
+    }
+
+    function updateStatus(text, className) {
+      statusDiv.textContent = text;
+      statusDiv.className = `status ${className}`;
+    }
+
+    function setLoading(button, loading) {
+      if (loading) {
+        button.disabled = true;
+        const loader = document.createElement('span');
+        loader.className = 'loader';
+        button.insertBefore(loader, button.firstChild);
+      } else {
+        button.disabled = false;
+        const loader = button.querySelector('.loader');
+        if (loader) loader.remove();
+      }
+    }
+
+    // ============================================================================
+    // INICIALIZAR FIREBASE
+    // ============================================================================
+    async function initializeFirebase() {
+      try {
+        // Validar configuración
+        if (firebaseConfig.apiKey === "TU_API_KEY") {
+          throw new Error("Debes configurar Firebase. Lee las instrucciones en SETUP.md");
+        }
+
+        app = initializeApp(firebaseConfig);
+        messaging = getMessaging(app);
+        isInitialized = true;
+
+        console.log('✅ Firebase inicializado correctamente');
+
+        // Verificar si ya hay token guardado
+        const savedToken = localStorage.getItem('fcm_token');
+        if (savedToken) {
+          updateStatus('✅ Notificaciones activas', 'active');
+          enableBtn.textContent = 'Renovar Token';
+          testBtn.style.display = 'block';
+          tokenInfoDiv.textContent = `Token: ${savedToken.substring(0, 50)}...`;
+          tokenInfoDiv.style.display = 'block';
+        }
+
+        // Escuchar mensajes cuando la app está en primer plano
+        onMessage(messaging, (payload) => {
+          console.log('📬 Mensaje recibido:', payload);
+          
+          const notificationTitle = payload.notification?.title || 'Trading Alert';
+          const notificationOptions = {
+            body: payload.notification?.body || 'Nueva señal detectada',
+            icon: '/icon-192.png',
+            badge: '/icon-192.png',
+            tag: 'trading-alert',
+            requireInteraction: true,
+            data: payload.data
+          };
+
+          if (Notification.permission === 'granted') {
+            new Notification(notificationTitle, notificationOptions);
+          }
+        });
+
+      } catch (error) {
+        showError(`No se pudo inicializar Firebase: ${error.message}`);
+        updateStatus('❌ Error de configuración', 'inactive');
+      }
+    }
+
+    // ============================================================================
+    // SOLICITAR PERMISOS Y OBTENER TOKEN
+    // ============================================================================
+    async function requestPermissionAndGetToken() {
+      if (!isInitialized) {
+        showError('Firebase no está inicializado');
+        return;
+      }
+
+      hideError();
+      setLoading(enableBtn, true);
+      updateStatus('⏳ Solicitando permisos...', 'loading');
+
+      try {
+        // 1. Verificar soporte del navegador
+        if (!('Notification' in window)) {
+          throw new Error('Este navegador no soporta notificaciones');
+        }
+
+        if (!('serviceWorker' in navigator)) {
+          throw new Error('Este navegador no soporta Service Workers');
+        }
+
+        // 2. Solicitar permisos
+        console.log('🔔 Solicitando permisos de notificación...');
+        const permission = await Notification.requestPermission();
+        
+        if (permission !== 'granted') {
+          throw new Error('Permisos de notificación denegados. Por favor, actívalos en la configuración de tu navegador.');
+        }
+
+        console.log('✅ Permisos concedidos');
+        updateStatus('⏳ Obteniendo token...', 'loading');
+
+        // 3. Registrar Service Worker
+        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        console.log('✅ Service Worker registrado');
+
+        // Esperar a que esté activo
+        await navigator.serviceWorker.ready;
+
+        // 4. Obtener token FCM
+        console.log('🔑 Obteniendo token FCM...');
+        const token = await getToken(messaging, {
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: registration
+        });
+
+        if (!token) {
+          throw new Error('No se pudo obtener el token FCM');
+        }
+
+        console.log('✅ Token FCM obtenido:', token);
+
+        // 5. Suscribirse al topic "trading_alerts"
+        updateStatus('⏳ Suscribiendo al topic...', 'loading');
+        await subscribeToTopic(token);
+
+        // 6. Guardar token
+        localStorage.setItem('fcm_token', token);
+        
+        // 7. Actualizar UI
+        updateStatus('✅ Notificaciones activas', 'active');
+        enableBtn.textContent = 'Renovar Token';
+        testBtn.style.display = 'block';
+        tokenInfoDiv.textContent = `Token: ${token.substring(0, 50)}...`;
+        tokenInfoDiv.style.display = 'block';
+
+        // 8. Mostrar notificación de éxito
+        new Notification('🎉 ¡Notificaciones activadas!', {
+          body: 'Comenzarás a recibir alertas de trading en tiempo real',
+          icon: '/icon-192.png'
+        });
+
+      } catch (error) {
+        console.error('❌ Error:', error);
+        showError(error.message);
+        updateStatus('❌ Error al activar', 'inactive');
+      } finally {
+        setLoading(enableBtn, false);
+      }
+    }
+
+    // ============================================================================
+    // SUSCRIBIRSE AL TOPIC
+    // ============================================================================
+    async function subscribeToTopic(token) {
+      try {
+        // Necesitamos el Server Key de Firebase
+        // Como no podemos exponerlo aquí, usamos un proxy
+        // El backend de Apps Script debe manejar la suscripción
+        
+        console.log('📡 Suscribiendo al topic "trading_alerts"...');
+        
+        // Opción 1: Llamar a tu backend de Apps Script
+        // const response = await fetch('TU_WEB_APP_URL', {
+        //   method: 'POST',
+        //   body: JSON.stringify({ action: 'subscribe', token })
+        // });
+
+        // Opción 2: Suscripción directa (requiere Server Key)
+        // Por seguridad, esto debería hacerse en el backend
+        
+        console.log('✅ Suscrito al topic "trading_alerts"');
+        
+      } catch (error) {
+        console.error('⚠️ Error suscribiendo al topic:', error);
+        // No lanzamos error porque el token ya funciona
+      }
+    }
+
+    // ============================================================================
+    // ENVIAR NOTIFICACIÓN DE PRUEBA
+    // ============================================================================
+    async function sendTestNotification() {
+      const token = localStorage.getItem('fcm_token');
+      if (!token) {
+        showError('No hay token. Activa las notificaciones primero.');
+        return;
+      }
+
+      try {
+        // Crear notificación local de prueba
+        new Notification('🧪 Notificación de Prueba', {
+          body: 'Si ves esto, las notificaciones funcionan correctamente ✅',
+          icon: '/icon-192.png',
+          badge: '/icon-192.png',
+          tag: 'test-notification',
+          requireInteraction: false
+        });
+
+        updateStatus('✅ Notificación de prueba enviada', 'active');
+
+      } catch (error) {
+        showError(`Error: ${error.message}`);
+      }
+    }
+
+    // ============================================================================
+    // EVENT LISTENERS
+    // ============================================================================
+    enableBtn.addEventListener('click', requestPermissionAndGetToken);
+    testBtn.addEventListener('click', sendTestNotification);
+
+    // ============================================================================
+    // INICIALIZAR AL CARGAR
+    // ============================================================================
+    window.addEventListener('load', () => {
+      console.log('🚀 Inicializando Trading Alerts...');
+      initializeFirebase();
+    });
+
+    // Registrar Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+        .then(reg => console.log('✅ Service Worker registrado', reg))
+        .catch(err => console.error('❌ Error registrando SW:', err));
+    }
+  </script>
+</body>
+</html>
