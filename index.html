@@ -388,7 +388,7 @@
         updateStatus('⏳ Obteniendo token...', 'loading');
 
         // 3. Registrar Service Worker
-        const registration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+        const registration = await navigator.serviceWorker.register('/trading-alerts/firebase-messaging-sw.js');
         console.log('✅ Service Worker registrado');
 
         // Esperar a que esté activo
@@ -519,7 +519,7 @@
 
     // Registrar Service Worker para PWA
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      navigator.serviceWorker.register('/trading-alerts/firebase-messaging-sw.js')
         .then(reg => console.log('✅ Service Worker registrado', reg))
         .catch(err => console.error('❌ Error registrando SW:', err));
     }
