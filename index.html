@@ -422,10 +422,12 @@
         tokenInfoDiv.style.display = 'block';
 
         // 8. Mostrar notificación de éxito
-        new Notification('🎉 ¡Notificaciones activadas!', {
-          body: 'Comenzarás a recibir alertas de trading en tiempo real',
-          icon: '/icon-192.png'
-        });
+      const reg = await navigator.serviceWorker.ready;
+      await reg.showNotification('🎉 ¡Notificaciones activadas!', {
+        body: 'Comenzarás a recibir alertas de trading en tiempo real',
+        icon: '/trading-alerts/icon-192.png',
+        badge: '/trading-alerts/icon-192.png'
+      });
 
       } catch (error) {
         console.error('❌ Error:', error);
@@ -479,29 +481,32 @@
     // ============================================================================
     // ENVIAR NOTIFICACIÓN DE PRUEBA
     // ============================================================================
-    async function sendTestNotification() {
-      const token = localStorage.getItem('fcm_token');
-      if (!token) {
-        showError('No hay token. Activa las notificaciones primero.');
-        return;
-      }
-
-      try {
-        // Crear notificación local de prueba
-        new Notification('🧪 Notificación de Prueba', {
-          body: 'Si ves esto, las notificaciones funcionan correctamente ✅',
-          icon: '/icon-192.png',
-          badge: '/icon-192.png',
-          tag: 'test-notification',
-          requireInteraction: false
-        });
-
-        updateStatus('✅ Notificación de prueba enviada', 'active');
-
-      } catch (error) {
-        showError(`Error: ${error.message}`);
-      }
+  async function sendTestNotification() {
+    const token = localStorage.getItem('fcm_token');
+    if (!token) {
+      showError('No hay token. Activa las notificaciones primero.');
+      return;
     }
+  
+    try {
+      // Obtener el service worker registration
+      const registration = await navigator.serviceWorker.ready;
+      
+      // Usar showNotification del service worker
+      await registration.showNotification('🧪 Notificación de Prueba', {
+        body: 'Si ves esto, las notificaciones funcionan correctamente ✅',
+        icon: '/trading-alerts/icon-192.png',
+        badge: '/trading-alerts/icon-192.png',
+        tag: 'test-notification',
+        requireInteraction: false
+      });
+  
+      updateStatus('✅ Notificación de prueba enviada', 'active');
+  
+    } catch (error) {
+      showError(`Error: ${error.message}`);
+    }
+  }
 
     // ============================================================================
     // EVENT LISTENERS
