@@ -453,25 +453,18 @@ async function registerTokenInAppsScript(token) {
       return;
     }
     
-    console.log('📤 Enviando a:', APPS_SCRIPT_URL);
-    
-    const payload = {
-      action: 'registerFCM',
-      token: token,
-      userAgent: navigator.userAgent
-    };
+    // 🎯 SIN Content-Type header para evitar preflight
+    const params = new URLSearchParams();
+    params.append('action', 'registerFCM');
+    params.append('token', token);
+    params.append('userAgent', navigator.userAgent);
     
     const response = await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      // 👆 SIN mode: 'cors'
-      body: JSON.stringify(payload)
+      body: params  // URLSearchParams en lugar de JSON
     });
     
     console.log('📥 Response status:', response.status);
-    console.log('📥 Response headers:', [...response.headers.entries()]);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
