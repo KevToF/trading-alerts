@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trading Alerts - Dashboard de Análisis</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #0f0f1e;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid transparent;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #fff;
+    }
+
+    /* GRID DE GRÁFICOS */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .chart-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .chart-title {
+      font-size: 20px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chart-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* TRADINGVIEW WIDGETS */
+    .tradingview-widget-container {
+      width: 100%;
+      height: 500px;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* PANEL DE SEÑALES */
+    .signals-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .signals-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .signals-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .refresh-btn {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(17, 153, 142, 0.4);
+    }
+
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .signal-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+      border-left: 4px solid;
+      transition: all 0.3s ease;
+    }
+
+    .signal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .signal-card.buy {
+      border-left-color: #38ef7d;
+    }
+
+    .signal-card.sell {
+      border-left-color: #ff6b6b;
+    }
+
+    .signal-symbol {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .signal-type {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .signal-type.buy {
+      background: rgba(56, 239, 125, 0.2);
+      color: #38ef7d;
+    }
+
+    .signal-type.sell {
+      background: rgba(255, 107, 107, 0.2);
+      color: #ff6b6b;
+    }
+
+    .signal-price {
+      font-size: 14px;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+
+    .signal-time {
+      font-size: 12px;
+      color: #777;
+    }
+
+    /* HISTORIAL */
+    .history-panel {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .history-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .history-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+    }
+
+    .history-item:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .history-info {
+      flex: 1;
+    }
+
+    .history-symbol {
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
+
+    .history-details {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    .history-time {
+      font-size: 12px;
+      color: #777;
+      text-align: right;
+    }
+
+    /* INDICADORES */
+    .indicators-info {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-radius: 15px;
+      padding: 25px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(102, 126, 234, 0.3);
+    }
+
+    .indicators-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .indicators-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .indicator-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 10px;
+      border-left: 3px solid #667eea;
+    }
+
+    .indicator-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #667eea;
+    }
+
+    .indicator-desc {
+      font-size: 13px;
+      color: #aaa;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .signals-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tradingview-widget-container {
+        height: 400px;
+      }
+    }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(102, 126, 234, 0.5);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(102, 126, 234, 0.7);
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-content">
+      <div class="logo">
+        📊 Trading Alerts Dashboard
+      </div>
+      <button class="btn-back" onclick="window.location.href='index.html'">
+        ← Volver a Notificaciones
+      </button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('btc')">₿ BTC/USDT</button>
+      <button class="tab" onclick="showTab('eth')">Ξ ETH/USDT</button>
+      <button class="tab" onclick="showTab('sol')">◎ SOL/USDT</button>
+      <button class="tab" onclick="showTab('all')">📊 Todos</button>
+    </div>
+
+    <!-- INFORMACIÓN DE INDICADORES -->
+    <div class="indicators-info">
+      <div class="indicators-title">🎯 Indicadores Activos en los Gráficos</div>
+      <div class="indicators-grid">
+        <div class="indicator-item">
+          <div class="indicator-name">📍 Pivot Points</div>
+          <div class="indicator-desc">Niveles de soporte y resistencia clave</div>
+        </div>
+        <div class="indicator-item">
+          <div class="indicator-name">📈 EMA 9</div>
+          <div class="indicator-desc">Media móvil exponencial de 9 períodos</div>
+        </div>
+        <div class="indicator-item">
+          <div class="indicator-name">📊 VWAP</div>
+          <div class="indicator-desc">Precio promedio ponderado por volumen</div>
+        </div>
+        <div class="indicator-item">
+          <div class="indicator-name">📉 Bandas VWAP</div>
+          <div class="indicator-desc">Upper y Lower bands de confianza</div>
+        </div>
+        <div class="indicator-item">
+          <div class="indicator-name">🔊 Volumen</div>
+          <div class="indicator-desc">Análisis de volumen de operaciones</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL DE SEÑALES ACTIVAS -->
+    <div class="signals-panel">
+      <div class="signals-header">
+        <div class="signals-title">🔔 Señales Activas</div>
+        <button class="refresh-btn" onclick="refreshSignals()">🔄 Actualizar</button>
+      </div>
+      <div class="signals-grid" id="signalsGrid">
+        <!-- Señales de ejemplo -->
+        <div class="signal-card buy">
+          <div class="signal-symbol">₿ BTC/USDT</div>
+          <span class="signal-type buy">🟢 COMPRA</span>
+          <div class="signal-price">Precio: $97,245.50</div>
+          <div class="signal-price">Estrategia: Pivot + EMA9</div>
+          <div class="signal-time">Hace 5 minutos</div>
+        </div>
+
+        <div class="signal-card sell">
+          <div class="signal-symbol">Ξ ETH/USDT</div>
+          <span class="signal-type sell">🔴 VENTA</span>
+          <div class="signal-price">Precio: $3,456.20</div>
+          <div class="signal-price">Estrategia: VWAP Upper</div>
+          <div class="signal-time">Hace 12 minutos</div>
+        </div>
+
+        <div class="signal-card buy">
+          <div class="signal-symbol">◎ SOL/USDT</div>
+          <span class="signal-type buy">🟢 COMPRA</span>
+          <div class="signal-price">Precio: $198.75</div>
+          <div class="signal-price">Estrategia: VWAP Lower</div>
+          <div class="signal-time">Hace 18 minutos</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRÁFICOS DE TRADINGVIEW -->
+    <div class="charts-grid" id="chartsGrid">
+      <!-- BTC Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            ₿ Bitcoin
+            <span class="chart-badge">BTC/USDT</span>
+          </div>
+        </div>
+        <div class="tradingview-widget-container">
+          <div id="btc-chart"></div>
+        </div>
+      </div>
+
+      <!-- ETH Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            Ξ Ethereum
+            <span class="chart-badge">ETH/USDT</span>
+          </div>
+        </div>
+        <div class="tradingview-widget-container">
+          <div id="eth-chart"></div>
+        </div>
+      </div>
+
+      <!-- SOL Chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div class="chart-title">
+            ◎ Solana
+            <span class="chart-badge">SOL/USDT</span>
+          </div>
+        </div>
+        <div class="tradingview-widget-container">
+          <div id="sol-chart"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORIAL DE ALERTAS -->
+    <div class="history-panel">
+      <div class="history-title">📜 Historial de Alertas Recibidas</div>
+      <div class="history-list" id="historyList">
+        <div class="history-item">
+          <div class="history-info">
+            <div class="history-symbol">₿ BTC/USDT - COMPRA</div>
+            <div class="history-details">Pivot R1 roto + EMA9 alcista • $97,245.50</div>
+          </div>
+          <div class="history-time">
+            Hoy<br>14:32
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-info">
+            <div class="history-symbol">Ξ ETH/USDT - VENTA</div>
+            <div class="history-details">VWAP Upper alcanzado • $3,456.20</div>
+          </div>
+          <div class="history-time">
+            Hoy<br>14:18
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-info">
+            <div class="history-symbol">◎ SOL/USDT - COMPRA</div>
+            <div class="history-details">VWAP Lower rebote + volumen • $198.75</div>
+          </div>
+          <div class="history-time">
+            Hoy<br>14:02
+          </div>
+        </div>
+
+        <div class="history-item">
+          <div class="history-info">
+            <div class="history-symbol">₿ BTC/USDT - VENTA</div>
+            <div class="history-details">Pivot S1 soporte débil • $96,850.00</div>
+          </div>
+          <div class="history-time">
+            Hoy<br>13:45
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TradingView Widget Scripts -->
+  <script src="https://s3.tradingview.com/tv.js"></script>
+  <script>
+    // ============================================================================
+    // CONFIGURACIÓN DE GRÁFICOS TRADINGVIEW
+    // ============================================================================
+    
+    function createChart(containerId, symbol, symbolName) {
+      new TradingView.widget({
+        "width": "100%",
+        "height": "100%",
+        "symbol": symbol,
+        "interval": "5",
+        "timezone": "America/Bogota",
+        "theme": "dark",
+        "style": "1",
+        "locale": "es",
+        "toolbar_bg": "#0f0f1e",
+        "enable_publishing": false,
+        "hide_side_toolbar": false,
+        "allow_symbol_change": true,
+        "container_id": containerId,
+        "studies": [
+          "PivotPointsStandard@tv-basicstudies",
+          "MAExp@tv-basicstudies",
+          "VWAP@tv-basicstudies",
+          "Volume@tv-basicstudies"
+        ],
+        "studies_overrides": {
+          "volume.volume.color.0": "#ff6b6b",
+          "volume.volume.color.1": "#38ef7d",
+          "moving average exponential.length": 9,
+          "moving average exponential.color": "#667eea"
+        }
+      });
+    }
+
+    // Inicializar gráficos cuando cargue la página
+    window.addEventListener('load', () => {
+      createChart('btc-chart', 'BINANCE:BTCUSDT', 'Bitcoin');
+      createChart('eth-chart', 'BINANCE:ETHUSDT', 'Ethereum');
+      createChart('sol-chart', 'BINANCE:SOLUSDT', 'Solana');
+    });
+
+    // ============================================================================
+    // FUNCIONES DE TABS
+    // ============================================================================
+    
+    function showTab(coin) {
+      // Actualizar estado de tabs
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      event.target.classList.add('active');
+
+      // Filtrar señales (aquí puedes agregar lógica real)
+      console.log('Mostrando:', coin);
+    }
+
+    // ============================================================================
+    // ACTUALIZAR SEÑALES
+    // ============================================================================
+    
+    function refreshSignals() {
+      const btn = event.target;
+      btn.textContent = '⏳ Actualizando...';
+      btn.disabled = true;
+
+      // Simular carga (aquí conectarías con tu backend real)
+      setTimeout(() => {
+        btn.textContent = '🔄 Actualizar';
+        btn.disabled = false;
+        
+        // Mostrar notificación de éxito
+        alert('✅ Señales actualizadas correctamente');
+      }, 1500);
+    }
+
+    // ============================================================================
+    // CARGAR HISTORIAL DE NOTIFICACIONES
+    // ============================================================================
+    
+    function loadNotificationHistory() {
+      // Aquí podrías conectar con localStorage o tu backend
+      const history = localStorage.getItem('notification_history');
+      if (history) {
+        const historyList = document.getElementById('historyList');
+        // Renderizar historial real
+        console.log('Historial cargado:', history);
+      }
+    }
+
+    // Cargar historial al inicio
+    loadNotificationHistory();
+  </script>
+</body>
+</html>
