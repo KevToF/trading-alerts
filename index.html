@@ -196,6 +196,17 @@
         font-size: 24px;
       }
     }
+
+.btn-charts {
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  color: white;
+}
+
+.btn-charts:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(17, 153, 142, 0.4);
+}
+    
   </style>
 </head>
 <body>
@@ -217,6 +228,10 @@
     <button id="testBtn" class="btn-secondary" style="display: none;">
       Enviar Notificación de Prueba
     </button>
+
+    <button id="chartsBtn" class="btn-charts" onclick="window.location.href='charts.html'">
+  📊 Ver Gráficos y Análisis
+</button>
 
     <div id="error" class="error" style="display: none;"></div>
 
