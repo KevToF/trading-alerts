@@ -29,7 +29,7 @@
     }
 
     .header-content {
-      max-width: 1600px;
+      max-width: 2000px; /* Aumentado para más ancho */
       margin: 0 auto;
       display: flex;
       justify-content: space-between;
@@ -64,7 +64,7 @@
 
     /* CONTAINER */
     .container {
-      max-width: 1600px;
+      max-width: 2000px; /* Aumentado para más ancho */
       margin: 0 auto;
       padding: 30px 20px;
     }
@@ -108,7 +108,7 @@
       color: #aaa;
     }
 
-    /* GRID DE GRÁFICOS - MÁS ESPACIO */
+    /* GRID DE GRÁFICOS - MÁS ESPACIO Y ANCHO */
     .charts-section {
       margin-bottom: 40px;
     }
@@ -125,17 +125,18 @@
     .chart-card {
       background: rgba(255, 255, 255, 0.05);
       border-radius: 15px;
-      padding: 20px;
+      padding: 25px; /* Aumentado el padding */
       margin-bottom: 30px;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 100%; /* Asegurar que use todo el ancho */
     }
 
     .chart-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 20px; /* Más espacio */
     }
 
     .chart-title {
@@ -154,173 +155,32 @@
       font-weight: 600;
     }
 
-    /* TRADINGVIEW WIDGETS - MÁS ALTURA */
+    /* TRADINGVIEW WIDGETS - MÁS ALTURA Y ANCHO */
     .tradingview-widget-container {
       width: 100%;
-      height: 600px;
+      height: 700px; /* Aumentado de 600px a 700px */
       border-radius: 10px;
       overflow: hidden;
-    }
-
-    /* PANEL DE SEÑALES */
-    .signals-panel {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 25px;
-      margin-bottom: 30px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .signals-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .signals-title {
-      font-size: 24px;
-      font-weight: 700;
-    }
-
-    .info-badge {
-      background: rgba(255, 193, 7, 0.2);
-      color: #ffc107;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .signals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-    }
-
-    .signal-card {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px;
-      border-left: 4px solid;
-      transition: all 0.3s ease;
-    }
-
-    .signal-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .signal-card.buy {
-      border-left-color: #38ef7d;
-    }
-
-    .signal-card.sell {
-      border-left-color: #ff6b6b;
-    }
-
-    .signal-symbol {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .signal-type {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .signal-type.buy {
-      background: rgba(56, 239, 125, 0.2);
-      color: #38ef7d;
-    }
-
-    .signal-type.sell {
-      background: rgba(255, 107, 107, 0.2);
-      color: #ff6b6b;
-    }
-
-    .signal-price {
-      font-size: 14px;
-      color: #aaa;
-      margin-bottom: 5px;
-    }
-
-    .signal-time {
-      font-size: 12px;
-      color: #777;
-    }
-
-    /* HISTORIAL */
-    .history-panel {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 25px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .history-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .history-list {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.2s ease;
-    }
-
-    .history-item:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .history-info {
-      flex: 1;
-    }
-
-    .history-symbol {
-      font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-
-    .history-details {
-      font-size: 13px;
-      color: #aaa;
-    }
-
-    .history-time {
-      font-size: 12px;
-      color: #777;
-      text-align: right;
     }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
       .tradingview-widget-container {
-        height: 450px;
+        height: 500px;
       }
+      
+      .container {
+        padding: 20px 15px;
+      }
+      
+      .chart-card {
+        padding: 20px;
+      }
+    }
 
-      .signals-grid {
-        grid-template-columns: 1fr;
+    @media (min-width: 1200px) {
+      .tradingview-widget-container {
+        height: 800px; /* Aún más altura en pantallas grandes */
       }
     }
 
@@ -384,42 +244,6 @@
       </div>
     </div>
 
-    <!-- SEÑALES ACTIVAS (EJEMPLO) -->
-    <div class="signals-panel">
-      <div class="signals-header">
-        <div class="signals-title">🔔 Señales Activas</div>
-        <span class="info-badge">💡 Datos de ejemplo</span>
-      </div>
-      <div class="signals-grid">
-        <div class="signal-card buy">
-          <div class="signal-symbol">₿ BTC/USDT</div>
-          <span class="signal-type buy">🟢 COMPRA</span>
-          <div class="signal-price">Precio: $97,245.50</div>
-          <div class="signal-price">Estrategia: Pivot + EMA9</div>
-          <div class="signal-time">Ejemplo - Conecta con tu backend</div>
-        </div>
-
-        <div class="signal-card sell">
-          <div class="signal-symbol">Ξ ETH/USDT</div>
-          <span class="signal-type sell">🔴 VENTA</span>
-          <div class="signal-price">Precio: $3,456.20</div>
-          <div class="signal-price">Estrategia: VWAP Upper</div>
-          <div class="signal-time">Ejemplo - Conecta con tu backend</div>
-        </div>
-
-        <div class="signal-card buy">
-          <div class="signal-symbol">◎ SOL/USDT</div>
-          <span class="signal-type buy">🟢 COMPRA</span>
-          <div class="signal-price">Precio: $198.75</div>
-          <div class="signal-price">Estrategia: VWAP Lower</div>
-          <div class="signal-time">Ejemplo - Conecta con tu backend</div>
-        </div>
-      </div>
-      <p style="text-align: center; color: #888; margin-top: 20px; font-size: 14px;">
-        💡 Estas son señales de ejemplo. Conecta tu sistema de trading real para ver datos en vivo.
-      </p>
-    </div>
-
     <!-- GRÁFICOS DE TRADINGVIEW -->
     <div class="charts-section">
       <div class="section-title">📈 Gráficos en Tiempo Real</div>
@@ -462,48 +286,6 @@
           <div id="sol-chart"></div>
         </div>
       </div>
-    </div>
-
-    <!-- HISTORIAL DE ALERTAS (EJEMPLO) -->
-    <div class="history-panel">
-      <div class="history-title">
-        📜 Historial de Alertas Recibidas
-        <span class="info-badge">💡 Datos de ejemplo</span>
-      </div>
-      <div class="history-list">
-        <div class="history-item">
-          <div class="history-info">
-            <div class="history-symbol">₿ BTC/USDT - COMPRA</div>
-            <div class="history-details">Pivot R1 roto + EMA9 alcista • $97,245.50</div>
-          </div>
-          <div class="history-time">
-            Ejemplo<br>14:32
-          </div>
-        </div>
-
-        <div class="history-item">
-          <div class="history-info">
-            <div class="history-symbol">Ξ ETH/USDT - VENTA</div>
-            <div class="history-details">VWAP Upper alcanzado • $3,456.20</div>
-          </div>
-          <div class="history-time">
-            Ejemplo<br>14:18
-          </div>
-        </div>
-
-        <div class="history-item">
-          <div class="history-info">
-            <div class="history-symbol">◎ SOL/USDT - COMPRA</div>
-            <div class="history-details">VWAP Lower rebote + volumen • $198.75</div>
-          </div>
-          <div class="history-time">
-            Ejemplo<br>14:02
-          </div>
-        </div>
-      </div>
-      <p style="text-align: center; color: #888; margin-top: 20px; font-size: 14px;">
-        💡 Este es un historial de ejemplo. Las alertas reales se guardarán cuando conectes tu sistema.
-      </p>
     </div>
   </div>
 
@@ -552,18 +334,6 @@
       createChart('sol-chart', 'BINANCE:SOLUSDT');
       console.log('✅ Gráficos cargados con: Pivots + EMA9 + VWAP + Volumen');
     });
-
-    // ============================================================================
-    // NOTA: DATOS DE EJEMPLO
-    // ============================================================================
-    // Las secciones de "Señales Activas" e "Historial" muestran datos de ejemplo.
-    // Para conectar datos reales:
-    // 1. Conecta con tu backend/API de trading
-    // 2. O usa localStorage para guardar notificaciones recibidas
-    // 3. Actualiza el DOM dinámicamente con los datos reales
-    
-    console.log('💡 Dashboard listo. Los gráficos muestran datos en tiempo real de Binance.');
-    console.log('💡 Señales e historial son ejemplos. Conecta tu sistema de trading para datos reales.');
   </script>
 </body>
 </html>
